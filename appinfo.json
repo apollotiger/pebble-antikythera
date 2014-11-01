@@ -1,0 +1,19 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        "location"
+    ],
+    "companyName": "Joshua Coats",
+    "longName": "antikythera",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "shortName": "antikythera",
+    "uuid": "54817480-1716-42e6-a168-8f8d154ee554",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
