@@ -1,6 +1,6 @@
 #include <pebble.h>
 #include "geometry.h"
-  
+
 #define HOUR_RADIUS 10
 #define HOUR_THICKNESS 3
 #define MINUTE_RADIUS 18
@@ -27,13 +27,13 @@
 #define JUPITER_RADIUS 75
 
 enum {
-    SUNRISE_KEY = 0x01,
-    SUNSET_KEY = 0x02,
-    SUN_KEY = 0x03,
-    MOON_KEY = 0x04,
-    MARS_KEY = 0x05,
-    VENUS_KEY = 0x06,
-    JUPITER_KEY = 0x07,
+  SUNRISE_KEY = 0x01,
+  SUNSET_KEY = 0x02,
+  SUN_KEY = 0x03,
+  MOON_KEY = 0x04,
+  MARS_KEY = 0x05,
+  VENUS_KEY = 0x06,
+  JUPITER_KEY = 0x07,
 };
 
 static Window *window;
@@ -62,8 +62,8 @@ static const GPathInfo VENUS_PATH_INFO = {
 };
 
 static void bg_update(Layer *layer, GContext *ctx) {
-    graphics_context_set_fill_color(ctx, GColorWhite);
-    graphics_fill_rect(ctx, layer_get_bounds(layer), 0, GCornerNone);
+  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_fill_rect(ctx, layer_get_bounds(layer), 0, GCornerNone);
 }
 
 
@@ -119,75 +119,75 @@ static void draw_astro(Layer *layer, GContext *ctx) {
 }
 
 static void draw_time(Layer *layer, GContext *ctx) {
-    // draw the time in an analog clock at the center
-    GRect bounds = layer_get_bounds(layer);
-    const GPoint center = grect_center_point(&bounds);
+  // draw the time in an analog clock at the center
+  GRect bounds = layer_get_bounds(layer);
+  const GPoint center = grect_center_point(&bounds);
 
-    time_t now = time(NULL);
-    struct tm *t = localtime(&now);
-    int secondMarkers = t->tm_sec / 2;
-    int i;
-    
-    graphics_context_set_fill_color(ctx, GColorWhite);
-    graphics_fill_circle(ctx, center, HMS_RADIUS);
-    graphics_context_set_fill_color(ctx, GColorBlack);
-    // draw the seconds
-    if (secondMarkers % 30 != 0) {
-      if (secondMarkers <= 15) {
-        for (i=1; i<=secondMarkers; i++) {
-          int angle = i * 4;
-          GPoint marker = GPoint(center.x + SECOND_RADIUS * sin_lookup(angle * angle_180 / 30) / TRIG_MAX_RATIO, center.y - SECOND_RADIUS * cos_lookup(angle * angle_180 / 30) / TRIG_MAX_RATIO);
-          graphics_fill_circle(ctx, marker, SECOND_THICKNESS);
-        }
-      } else {
-        for (i=(secondMarkers % 15 + 1); i<=15; i++) {
-          int angle = i * 4;
-          GPoint marker = GPoint(center.x + SECOND_RADIUS * sin_lookup(angle * angle_180 / 30) / TRIG_MAX_RATIO, center.y - SECOND_RADIUS * cos_lookup(angle * angle_180 / 30) / TRIG_MAX_RATIO);
-          graphics_fill_circle(ctx, marker, SECOND_THICKNESS);
-        }
+  time_t now = time(NULL);
+  struct tm *t = localtime(&now);
+  int secondMarkers = t->tm_sec / 2;
+  int i;
+
+  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_fill_circle(ctx, center, HMS_RADIUS);
+  graphics_context_set_fill_color(ctx, GColorBlack);
+  // draw the seconds
+  if (secondMarkers % 30 != 0) {
+    if (secondMarkers <= 15) {
+      for (i=1; i<=secondMarkers; i++) {
+        int angle = i * 4;
+        GPoint marker = GPoint(center.x + SECOND_RADIUS * sin_lookup(angle * angle_180 / 30) / TRIG_MAX_RATIO, center.y - SECOND_RADIUS * cos_lookup(angle * angle_180 / 30) / TRIG_MAX_RATIO);
+        graphics_fill_circle(ctx, marker, SECOND_THICKNESS);
+      }
+    } else {
+      for (i=(secondMarkers % 15 + 1); i<=15; i++) {
+        int angle = i * 4;
+        GPoint marker = GPoint(center.x + SECOND_RADIUS * sin_lookup(angle * angle_180 / 30) / TRIG_MAX_RATIO, center.y - SECOND_RADIUS * cos_lookup(angle * angle_180 / 30) / TRIG_MAX_RATIO);
+        graphics_fill_circle(ctx, marker, SECOND_THICKNESS);
       }
     }
-    // draw hour hand
-    graphics_draw_arc_cw(ctx, center, HOUR_RADIUS, HOUR_THICKNESS, -angle_90, ((t->tm_hour * angle_180 / 6) - angle_90), GColorBlack);
+  }
+  // draw hour hand
+  graphics_draw_arc_cw(ctx, center, HOUR_RADIUS, HOUR_THICKNESS, -angle_90, ((t->tm_hour * angle_180 / 6) - angle_90), GColorBlack);
 
-    // draw minute hand
-    graphics_draw_arc_cw(ctx, center, MINUTE_RADIUS, MINUTE_THICKNESS, -angle_90, ((t->tm_min * angle_180 / 30) - angle_90), GColorBlack);
+  // draw minute hand
+  graphics_draw_arc_cw(ctx, center, MINUTE_RADIUS, MINUTE_THICKNESS, -angle_90, ((t->tm_min * angle_180 / 30) - angle_90), GColorBlack);
 }
 
 static void update_astro(Layer *layer, GContext *ctx) {
-    bg_update(layer, ctx);
-    draw_astro(layer, ctx);
+  bg_update(layer, ctx);
+  draw_astro(layer, ctx);
 }
 
 static void handle_tick(struct tm *tick_time, TimeUnits units_changed) {
-    layer_mark_dirty(timeLayer);
+  layer_mark_dirty(timeLayer);
 }
 
 static void init(void) {
-    window = window_create();
-    window_set_background_color(window, GColorWhite);
-    window_stack_push(window, true);
-    
-    rootLayer = window_get_root_layer(window);
-    astroLayer = layer_create(GRect(0, 0, 144, 168));
-    timeLayer = layer_create(GRect(0, 0, 144, 168));
-    layer_set_update_proc(timeLayer, draw_time);
-    layer_set_update_proc(astroLayer, update_astro);
-    layer_add_child(rootLayer, astroLayer);
-    layer_add_child(rootLayer, timeLayer);
+  window = window_create();
+  window_set_background_color(window, GColorWhite);
+  window_stack_push(window, true);
 
-    tick_timer_service_subscribe(SECOND_UNIT, handle_tick);
+  rootLayer = window_get_root_layer(window);
+  astroLayer = layer_create(GRect(0, 0, 144, 168));
+  timeLayer = layer_create(GRect(0, 0, 144, 168));
+  layer_set_update_proc(timeLayer, draw_time);
+  layer_set_update_proc(astroLayer, update_astro);
+  layer_add_child(rootLayer, astroLayer);
+  layer_add_child(rootLayer, timeLayer);
+
+  tick_timer_service_subscribe(SECOND_UNIT, handle_tick);
 }
 
 static void deinit(void) {
-    tick_timer_service_unsubscribe();
-    layer_destroy(timeLayer);
-    layer_destroy(astroLayer);
-    window_destroy(window);
+  tick_timer_service_unsubscribe();
+  layer_destroy(timeLayer);
+  layer_destroy(astroLayer);
+  window_destroy(window);
 }
 
 int main(void) {
-    init();
-    app_event_loop();
-    deinit();
+  init();
+  app_event_loop();
+  deinit();
 }
